@@ -3,14 +3,9 @@
 
 struct Account
 {
-	~Account()
-	{
-		if (name != nullptr)
-		{
-			delete[] name;
-			name = nullptr;
-		}
-	}
+	~Account();
+
+	Account(const Account& other);
 
 	int id = 0;
 	char* name = nullptr;
