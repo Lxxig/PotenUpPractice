@@ -26,6 +26,9 @@ public:
 	bool Menu();
 
 	void CreateAccount();
+	void CreateGeneralAccount();
+	void CreateCreidtAccount();
+	void CreateDonationAccount();
 	bool Check() const;
 	void Deposit();
 	void Withdraw();
