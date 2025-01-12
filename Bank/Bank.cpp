@@ -4,10 +4,74 @@
 
 void Bank::Play()
 {
+	ReadFile();
 	while (true)
 	{
 		if (Menu() == false) return;
 	}
+}
+
+void Bank::ReadFile()
+{
+	FILE* file;
+	fopen_s(&file, "CustomerInfo.txt", "rt");
+	if (file == nullptr) return;
+
+	char buffer[1000];
+	int tempAccountType, tempId;
+	float tempBalanced, tempDonationAmount;
+	while (fgets(buffer, 1000, file) != nullptr)
+	{
+		++accountCnt;
+		sscanf_s(buffer, "AccountType: %d | Name: %s | ID: %d | Balanced: %f | DonationAmount: %f",
+			&tempAccountType, tempName, 100, &tempId, &tempBalanced, &tempDonationAmount);
+		
+		switch (AccountType(tempAccountType))
+		{
+		case AccountType::GeneralAccount:
+			account[accountCnt] = new Account();
+			account[accountCnt]->name = tempName;
+			account[accountCnt]->id = tempId;
+			account[accountCnt]->balanced = tempBalanced;
+			account[accountCnt]->donationAmount = tempDonationAmount;
+			break;
+		case AccountType::CreditAccount:
+			account[accountCnt] = new CreditAccount();
+			account[accountCnt]->name = tempName;
+			account[accountCnt]->id = tempId;
+			account[accountCnt]->balanced = tempBalanced;
+			account[accountCnt]->donationAmount = tempDonationAmount;
+			break;
+		case AccountType::DonationAccount:
+			account[accountCnt] = new DonationAccount();
+			account[accountCnt]->name = tempName;
+			account[accountCnt]->id = tempId;
+			account[accountCnt]->balanced = tempBalanced;
+			account[accountCnt]->donationAmount = tempDonationAmount;
+			break;
+		default:
+			break;
+		}
+	}
+
+	fclose(file);
+}
+
+void Bank::WriteFile()
+{
+	FILE* file;
+	fopen_s(&file, "CustomerInfo.txt", "wt");
+	char buffer[1000];
+
+	for (int i = 0; i <= accountCnt; ++i)
+	{
+		snprintf(buffer, 1000, "AccountType: %d | Name: %s | ID: %d | Balanced: %f | DonationAmount: %f",
+			(int)(account[i]->accountType), account[i]->name, account[i]->id
+			, account[i]->balanced, account[i]->donationAmount);
+		fputs(buffer, file);
+	}
+
+	fclose(file);
 }
 
 bool Bank::Menu()
@@ -21,18 +85,19 @@ bool Bank::Menu()
 		std::cin >> input;
 		if (input == 'Q') return false;
 
+
 		switch (static_cast<EMenu>(input - '0'))
 		{
 		case EMenu::CreateAccount:
 			CreateAccount(); return true;
 		case EMenu::Deposit:
-			if (AccountCnt < 0) continue;  // 계좌가 하나도 존재하지 않으면 continue
+			if (accountCnt < 0) continue;  // 계좌가 하나도 존재하지 않으면 continue
 			Deposit(); return true;
 		case EMenu::Withdraw:
-			if (AccountCnt < 0) continue;
+			if (accountCnt < 0) continue;
 			Withdraw(); return true;
 		case EMenu::Inquire:
-			if (AccountCnt < 0) continue;
+			if (accountCnt < 0) continue;
 			Inquire(); return true;
 		default:
 			break;
@@ -42,7 +107,7 @@ bool Bank::Menu()
 
 void Bank::CreateAccount()
 {
-	AccountCnt++;
+	accountCnt++;
 
 	while (true)
 	{
@@ -69,7 +134,7 @@ void Bank::CreateAccount()
 
 void Bank::CreateGeneralAccount()
 {
-	account[AccountCnt] = new Account();
+	account[accountCnt] = new Account();
 	while (true)
 	{
 		char name[100];
@@ -77,10 +142,10 @@ void Bank::CreateGeneralAccount()
 		std::cout << "			[일반 계좌 개설]\n";
 		std::cout << "===========================================================\n";
 		std::cout << "ID(ID > 0) & Name(100자 이내)\n>> ";
-		std::cin >> account[AccountCnt]->id >> name;
+		std::cin >> account[accountCnt]->id >> name;
 		size_t nameSize = strlen(name) + 1;
-		account[AccountCnt]->name = new char[nameSize];
-		strcpy_s(account[AccountCnt]->name, nameSize, name);
+		account[accountCnt]->name = new char[nameSize];
+		strcpy_s(account[accountCnt]->name, nameSize, name);
 
 		// 계좌 번호 중복 체크
 		if (Check()) continue;
@@ -94,7 +159,7 @@ void Bank::CreateGeneralAccount()
 
 void Bank::CreateCreidtAccount()
 {
-	account[AccountCnt] = new CreditAccount();
+	account[accountCnt] = new CreditAccount();
 	while (true)
 	{
 		char name[100];
@@ -102,10 +167,10 @@ void Bank::CreateCreidtAccount()
 		std::cout << "			[신용 계좌 개설]\n";
 		std::cout << "===========================================================\n";
 		std::cout << "ID(ID > 0) & Name(100자 이내)\n>> ";
-		std::cin >> account[AccountCnt]->id >> name;
+		std::cin >> account[accountCnt]->id >> name;
 		size_t nameSize = strlen(name) + 1;
-		account[AccountCnt]->name = new char[nameSize];
-		strcpy_s(account[AccountCnt]->name, nameSize, name);
+		account[accountCnt]->name = new char[nameSize];
+		strcpy_s(account[accountCnt]->name, nameSize, name);
 
 		// 계좌 번호 중복 체크
 		if (Check()) continue;
@@ -119,7 +184,7 @@ void Bank::CreateCreidtAccount()
 
 void Bank::CreateDonationAccount()
 {
-	account[AccountCnt] = new DonationAccount();
+	account[accountCnt] = new DonationAccount();
 	while (true)
 	{
 		char name[100];
@@ -127,10 +192,10 @@ void Bank::CreateDonationAccount()
 		std::cout << "			[기부 계좌 개설]\n";
 		std::cout << "===========================================================\n";
 		std::cout << "ID(ID > 0) & Name(100자 이내)\n>> ";
-		std::cin >> account[AccountCnt]->id >> name;
+		std::cin >> account[accountCnt]->id >> name;
 		size_t nameSize = strlen(name) + 1;
-		account[AccountCnt]->name = new char[nameSize];
-		strcpy_s(account[AccountCnt]->name, nameSize, name);
+		account[accountCnt]->name = new char[nameSize];
+		strcpy_s(account[accountCnt]->name, nameSize, name);
 
 		// 계좌 번호 중복 체크
 		if (Check()) continue;
@@ -144,9 +209,9 @@ void Bank::CreateDonationAccount()
 
 bool Bank::Check() const
 {
-	for (int i = 0; i < AccountCnt; ++i)
+	for (int i = 0; i < accountCnt; ++i)
 	{
-		if (account[AccountCnt]->id == account[i]->id) return true;
+		if (account[accountCnt]->id == account[i]->id) return true;
 	}
 	return false;
 }
@@ -234,7 +299,7 @@ void Bank::Withdraw()
 
 int Bank::IdCheck(int inputID)
 {
-	for (int i = 0; i <= AccountCnt; ++i)
+	for (int i = 0; i <= accountCnt; ++i)
 	{
 		if (account[i]->id == inputID) return i;
 	}
@@ -246,7 +311,7 @@ void Bank::Inquire()
 	std::cout << "\n=============================================================================================\n";
 	std::cout << "		[전체 고객 잔액 조회]\n";
 	std::cout << "=============================================================================================\n";
-	for (int i = 0; i <= AccountCnt; ++i)
+	for (int i = 0; i <= accountCnt; ++i)
 	{
 		//std::cout << "Name:	" << account[i]->name << "	ID:	" << account[i]->id << "	Balanced:	" << account[i]->balanced << std::endl;
 		if (account[i]->accountType == AccountType::GeneralAccount)
@@ -266,7 +331,8 @@ void Bank::Inquire()
 
 Bank::~Bank()
 {
-	for (int i = 0; i <= AccountCnt; ++i)
+	WriteFile();
+	for (int i = 0; i <= accountCnt; ++i)
 	{
 		if (account[i] != nullptr)
 		{

@@ -19,7 +19,8 @@ struct Account
 
 	int id = 0;
 	char* name = nullptr;
-	float balanced = 0;
+	float balanced = 0.0f;
+	float donationAmount = 0.0f;
 	AccountType accountType = AccountType::GeneralAccount;
 };
 
@@ -33,5 +34,4 @@ struct DonationAccount : public Account
 {
 	DonationAccount();
 	float donationRate = 0.01f;
-	float donationAmount = 0.0f;
 };

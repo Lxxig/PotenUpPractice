@@ -23,6 +23,12 @@ class Bank
 {
 public:
 	void Play();
+
+	// 파일에 저장된 정보를 읽어 오는 함수.
+	void ReadFile();
+	// 파일에 정보를 작성하는 함수.
+	void WriteFile();
+
 	bool Menu();
 
 	void CreateAccount();
@@ -39,6 +45,6 @@ public:
 
 private:
 	Account* account[100];
-	int AccountCnt = -1;
-
+	int accountCnt = -1;
+	char tempName[100];
 };

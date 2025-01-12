@@ -25,4 +25,7 @@
     <ClInclude Include="Account.h" />
     <ClInclude Include="Bank.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="CustomerInfo.txt" />
+  </ItemGroup>
 </Project>
