@@ -1,1 +1,3 @@
-AccountType: 1 | Name: lee | ID: 1 | Balanced: 1000.000000 | DonationAmount: 0.000000AccountType: 3 | Name: kim | ID: 2 | Balanced: 0.000000 | DonationAmount: 0.000000
+AccountType: 1 | Name: lee | ID: 1 | Balanced: 1000.000000 | DonationAmount: 0.000000
+AccountType: 1 | Name: kim | ID: 2 | Balanced: 10000.000000 | DonationAmount: 0.000000
+AccountType: 3 | Name: choi | ID: 3 | Balanced: 1306.800049 | DonationAmount: 13.200000

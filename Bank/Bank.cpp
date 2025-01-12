@@ -26,25 +26,39 @@ void Bank::ReadFile()
 		sscanf_s(buffer, "AccountType: %d | Name: %s | ID: %d | Balanced: %f | DonationAmount: %f",
 			&tempAccountType, tempName, 100, &tempId, &tempBalanced, &tempDonationAmount);
 		
+		int length = strlen(tempName);
+		
 		switch (AccountType(tempAccountType))
 		{
 		case AccountType::GeneralAccount:
 			account[accountCnt] = new Account();
-			account[accountCnt]->name = tempName;
+
+			// 이름 저장.
+			account[accountCnt]->name = new char[length + 1];
+			strcpy_s(account[accountCnt]->name, length + 1, tempName);
+
 			account[accountCnt]->id = tempId;
 			account[accountCnt]->balanced = tempBalanced;
 			account[accountCnt]->donationAmount = tempDonationAmount;
 			break;
 		case AccountType::CreditAccount:
 			account[accountCnt] = new CreditAccount();
-			account[accountCnt]->name = tempName;
+
+			// 이름 저장.
+			account[accountCnt]->name = new char[length + 1];
+			strcpy_s(account[accountCnt]->name, length + 1, tempName);
+
 			account[accountCnt]->id = tempId;
 			account[accountCnt]->balanced = tempBalanced;
 			account[accountCnt]->donationAmount = tempDonationAmount;
 			break;
 		case AccountType::DonationAccount:
 			account[accountCnt] = new DonationAccount();
-			account[accountCnt]->name = tempName;
+
+			// 이름 저장.
+			account[accountCnt]->name = new char[length + 1];
+			strcpy_s(account[accountCnt]->name, length + 1, tempName);
+
 			account[accountCnt]->id = tempId;
 			account[accountCnt]->balanced = tempBalanced;
 			account[accountCnt]->donationAmount = tempDonationAmount;
@@ -65,7 +79,7 @@ void Bank::WriteFile()
 
 	for (int i = 0; i <= accountCnt; ++i)
 	{
-		snprintf(buffer, 1000, "AccountType: %d | Name: %s | ID: %d | Balanced: %f | DonationAmount: %f",
+		snprintf(buffer, 1000, "AccountType: %d | Name: %s | ID: %d | Balanced: %f | DonationAmount: %f\n",
 			(int)(account[i]->accountType), account[i]->name, account[i]->id
 			, account[i]->balanced, account[i]->donationAmount);
 		fputs(buffer, file);
